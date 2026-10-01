@@ -1,7 +1,7 @@
 ---
 name: cadence-developer
 description: Build, debug, and operate Cadence workflows, activities, and workers across supported SDKs (Go, Java, and Python — the Python SDK itself is alpha so coverage calls out gaps explicitly). Use when the user is writing Cadence SDK code; troubleshooting non-determinism, stuck workflows, or activity retries; using the `cadence` CLI or running `cadence-server`; or working with durable execution concepts such as signals, queries, child workflows, continue-as-new, saga, domains, or task lists.
-version: 0.6.2
+version: 0.6.3
 ---
 
 # Cadence Developer

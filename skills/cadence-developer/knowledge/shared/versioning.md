@@ -50,10 +50,10 @@ The first argument is a string identifier for the code region being versioned. P
 
 You may eventually want to delete the old code path. Two safe sequences:
 
-- **Run the change to extinction first.** Wait until no workflows from the era of the old code remain (use the visibility store to confirm). Then update `GetVersion` to require the new version: `workflow.GetVersion(ctx, "addRiskCheck", 1, 1)`. When that has run long enough that no executions remain on the pre-`GetVersion` history, you can remove the `GetVersion` call entirely.
-- **Use the Workflow Shadower as the safety net.** Before deleting any branch, replay the relevant historical workflows against the candidate code. Zero failures means it is safe.
+- **Run the change to extinction first.** Wait until no workflows from the era of the old code remain (use the visibility store to confirm). Then update `GetVersion` to require the new version: `workflow.GetVersion(ctx, "addRiskCheck", 1, 1)`. When that has run long enough that no executions remain on the pre-`GetVersion` history, you can remove the `GetVersion` call in two deploys. Deleting a call whose `minSupported` is above `DefaultVersion` in one deploy is unsafe. Executions that reach that point on the new code record no marker, and a worker still running the old call, mid-rollout or after a rollback, replays them, gets `DefaultVersion`, and panics. First change the call to `workflow.GetVersion(ctx, "addRiskCheck", workflow.DefaultVersion, 1)`, which still records the marker and also accepts histories without one. Once that release is the oldest version you might roll back to, delete the call.
+- **Use the Workflow Shadower as the safety net.** Before deleting any branch, replay the relevant historical workflows against the candidate code. Zero failures means it is safe. The Shadower replays old histories on the new code, so it does not cover removing the `GetVersion` call itself.
 
-Never delete a `GetVersion` branch (or the `GetVersion` call itself) without one of these checks.
+Never delete a `GetVersion` branch without one of these checks, and never delete a call whose `minSupported` is above `DefaultVersion` in one deploy.
 
 ## Strategy 3: Register a new workflow type
 

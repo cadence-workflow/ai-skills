@@ -156,7 +156,7 @@ if v >= 1 {
 }
 ```
 
-A `MarkerRecorded` event captures the version selected on the first run; replay always takes the same branch. Increment the `maxSupported` parameter (and add another `if` arm) each subsequent revision. Once no executions remain on the old branch, the dead arm can be removed by also removing the `GetVersion` call (only after confirming with a `WorkflowShadower` run).
+A `MarkerRecorded` event captures the version selected on the first run; replay always takes the same branch. Increment the `maxSupported` parameter (and add another `if` arm) each subsequent revision. Once no executions remain on the old branch, remove the dead arm after confirming with a `WorkflowShadower` run. Delete the `GetVersion` call itself in a later deploy; see [`shared/versioning.md`](../shared/versioning.md).
 
 ## Side effects
 
